@@ -16,7 +16,7 @@ class ContactsTableVC: UITableViewController {
     private let indexLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
     var contactsTs = ["Ar", "Ab", "Baa", "Effe"]
-    var phoneNumTs = ["0123", "0221", "00222", "022343"]
+    var phoneNumTs = ["01536", "0221", "00222", "022343"]
     
     
     // MARK: - Outlets
@@ -31,7 +31,6 @@ class ContactsTableVC: UITableViewController {
         // MARK: - Set UIBar Button
         let addContactBtnImage = UIImage(named: "createContactBtn")?.withRenderingMode(.alwaysOriginal)
         let addContactBtn = UIBarButtonItem(image: addContactBtnImage, style: .plain, target: self, action: #selector(addContact))
-        addContactBtn.tintColor = UIColor.black
         
         // Set right bar button
         navigationItem.rightBarButtonItem = addContactBtn
@@ -63,26 +62,38 @@ class ContactsTableVC: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cellContact = contactsTableVC.dequeueReusableCell(withIdentifier: "contactCell", for: indexPath)
         
         cellContact.backgroundColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 0.1485445205)
         cellContact.accessoryType = UITableViewCell.AccessoryType.disclosureIndicator
         cellContact.selectionStyle = .none
         
+        // Cell Image
         cellContact.imageView?.image = UIImage(named: "personPlaceholder")
         
+        // Add Tab Gesture Recognizer to image
+        let imageTap =  MyTapGesture(target: self, action: #selector(self.openCall))
+        imageTap.numberOfTapsRequired = 1
+        cellContact.imageView?.addGestureRecognizer(imageTap)
+        cellContact.imageView?.isUserInteractionEnabled = true
+        
+        // Contact Name
         cellContact.textLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         cellContact.textLabel?.text = contactsTs[indexPath.row]
         
+        // Contact Phone number
         cellContact.detailTextLabel?.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
         cellContact.detailTextLabel?.text = phoneNumTs[indexPath.row]
+        
+        // Send Phone Number on tapping on image
+        imageTap.phoneNumber = "\(phoneNumTs[indexPath.row])"
         
         
         return cellContact
     }
     
-    // Swipe action
-    
+    // Swipe action in tableviewcell
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let editAction = UIContextualAction(style: .destructive, title: "Edit") { (action, view, handler) in
             // Call alert message
@@ -107,6 +118,28 @@ class ContactsTableVC: UITableViewController {
     
     
     // MARK: - Phone Number
+    @objc func openCall(sender : MyTapGesture) {
+        let pNumber = sender.phoneNumber
+        print(pNumber)
+        callNumber(phoneNumber: pNumber)
+    }
+    
+    private func callNumber(phoneNumber:String) {
+        
+        if let phoneCallURL = URL(string: "telprompt://\(phoneNumber)") {
+            
+            let application:UIApplication = UIApplication.shared
+            if (application.canOpenURL(phoneCallURL)) {
+                if #available(iOS 10.0, *) {
+                    application.open(phoneCallURL, options: [:], completionHandler: nil)
+                } else {
+                    // Fallback on earlier versions
+                    application.openURL(phoneCallURL as URL)
+                    
+                }
+            }
+        }
+    }
 
     // MARK: - Misc Fncts
     
@@ -196,4 +229,8 @@ extension ContactsTableVC {
         
     }
     
+}
+
+class MyTapGesture: UITapGestureRecognizer {
+    var phoneNumber = String()
 }
