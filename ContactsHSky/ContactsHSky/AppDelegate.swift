@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         // MARK: - Set Nav Bar
-        UINavigationBar.appearance().barTintColor = UIColor.red
+        UINavigationBar.appearance().barTintColor = #colorLiteral(red: 0.6311209682, green: 0.9195419025, blue: 1, alpha: 1)
         return true
     }
 

@@ -74,20 +74,99 @@
             </objects>
             <point key="canvasLocation" x="-1975" y="94"/>
         </scene>
-        <!--View Controller-->
+        <!--Contact Proflle VC-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="ContactsHSky" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="profileVC" title="Profile" id="BYZ-38-t0r" userLabel="Contact Proflle VC" customClass="ProfileVC" customModule="ContactsHSky" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="personPlaceholder" translatesAutoresizingMaskIntoConstraints="NO" id="47V-XX-oJI">
+                                <rect key="frame" x="132" y="84" width="150" height="150"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="eTg-UR-aiX"/>
+                                    <constraint firstAttribute="height" constant="150" id="en3-QA-MLq"/>
+                                </constraints>
+                            </imageView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="3na-uH-udE" userLabel="Details Stack View">
+                                <rect key="frame" x="30" y="312" width="350" height="80"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9iY-ec-Zjb">
+                                        <rect key="frame" x="0.0" y="0.0" width="350" height="30"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter phone number" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xL5-9Z-ZoH">
+                                        <rect key="frame" x="0.0" y="50" width="350" height="30"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="phonePad"/>
+                                    </textField>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="350" id="7bW-eF-KVb"/>
+                                </constraints>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KJD-8i-cIs" userLabel="Cancel">
+                                <rect key="frame" x="30" y="433" width="65" height="30"/>
+                                <color key="backgroundColor" red="0.51879291879227241" green="0.71342767398749529" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Ded-Gk-8Z6"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="65" id="c27-p0-xMO"/>
+                                </constraints>
+                                <state key="normal" title="Cancel">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="cancelTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="S1f-fd-fl8"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NdM-C5-1vf">
+                                <rect key="frame" x="320" y="433" width="50" height="30"/>
+                                <color key="backgroundColor" red="0.59573969104341562" green="0.81739893141929043" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="QuZ-Rf-Kmu"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="o6K-VW-9Lt"/>
+                                </constraints>
+                                <state key="normal" title="Save">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="saveTapped:" destination="BYZ-38-t0r" eventType="touchDragInside" id="Ha9-XP-hFD"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="NdM-C5-1vf" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="KJD-8i-cIs" secondAttribute="trailing" constant="8" symbolic="YES" id="3Ev-Vk-cOL"/>
+                            <constraint firstItem="3na-uH-udE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="5Kb-0u-A7K"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="NdM-C5-1vf" secondAttribute="trailing" constant="44" id="CPJ-iK-eVN"/>
+                            <constraint firstItem="NdM-C5-1vf" firstAttribute="centerY" secondItem="KJD-8i-cIs" secondAttribute="centerY" id="Lcy-4I-gxk"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="3na-uH-udE" secondAttribute="trailing" constant="34" id="MFX-MI-o1p"/>
+                            <constraint firstItem="KJD-8i-cIs" firstAttribute="top" secondItem="3na-uH-udE" secondAttribute="bottom" constant="41" id="iOr-q1-o3k"/>
+                            <constraint firstItem="3na-uH-udE" firstAttribute="top" secondItem="47V-XX-oJI" secondAttribute="bottom" constant="78" id="nIt-0J-yB6"/>
+                            <constraint firstItem="47V-XX-oJI" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="40" id="s3d-71-Wyf"/>
+                            <constraint firstItem="KJD-8i-cIs" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="tAJ-QQ-zob"/>
+                            <constraint firstItem="47V-XX-oJI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="vwI-lB-VJz"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="cancelBtn" destination="KJD-8i-cIs" id="lXZ-VB-aZD"/>
+                        <outlet property="nameTxtFld" destination="9iY-ec-Zjb" id="qRE-Xs-COb"/>
+                        <outlet property="phoneNumTxtFld" destination="xL5-9Z-ZoH" id="W09-hd-G5g"/>
+                        <outlet property="profileImageView" destination="47V-XX-oJI" id="GHX-Tc-2s6"/>
+                        <outlet property="saveBtn" destination="NdM-C5-1vf" id="R29-W7-xxL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="965" y="94"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="personPlaceholder" width="40" height="25.5"/>
+    </resources>
 </document>

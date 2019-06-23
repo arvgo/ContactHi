@@ -81,6 +81,29 @@ class ContactsTableVC: UITableViewController {
         return cellContact
     }
     
+    // Swipe action
+    
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let editAction = UIContextualAction(style: .destructive, title: "Edit") { (action, view, handler) in
+            // Call alert message
+            self.alertMsg(alertType: "edit", row: indexPath.row)
+            print("Edit Action for ", indexPath.row)
+        }
+        editAction.backgroundColor = .green
+        let configuration = UISwipeActionsConfiguration(actions: [editAction])
+        configuration.performsFirstActionWithFullSwipe = false
+        return configuration
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+//            objects.remove(at: indexPath.row)
+//            tableView.deleteRows(at: [indexPath], with: .fade)
+            // Call alert message
+            alertMsg(alertType: "delete", row: indexPath.row)
+            print("swipe to del ", indexPath.row)
+        }
+    }
     
     
     // MARK: - Phone Number
@@ -88,10 +111,74 @@ class ContactsTableVC: UITableViewController {
     // MARK: - Misc Fncts
     
     @objc func addContact () {
+        // Call alert message
+        alertMsg(alertType: "add", row: 0)
         print("Add Contact Tapped")
     }
     
     
+    func alertMsg(alertType: String, row: Int) {
+        
+        var titleAlert = ""
+        var titleMsg = ""
+        
+        var contactName = contactsTs[row]
+        
+        switch alertType {
+        case "edit":
+            titleAlert = "Editing Contact \(contactName)"
+            titleMsg =  "Do you want to edit \(contactName)?"
+            print ("edit")
+            
+        case "delete":
+            titleAlert = "Deleting Contact \(contactName)"
+            titleMsg = "Do you want to delete \(contactName) from contacts?"
+            print ("delete")
+            
+        case "add":
+            titleAlert = "Adding Contact"
+            titleMsg = "Do you want to add to contacts?"
+            print ("add")
+            
+        default:
+            break
+        }
+        
+        // create the alert
+        let alert = UIAlertController(title: titleAlert, message: titleMsg, preferredStyle: .alert)
+        // add the actions (buttons)
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            switch alertType {
+            case "edit":
+                self.goToProfileVC()
+                
+            case "delete":
+                self.alertAction(actionType: alertType)
+
+            case "add":
+                self.goToProfileVC()
+
+            default:
+                break
+            }
+            
+        }))
+        
+        // show the alert
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func alertAction (actionType: String) {
+        print("alertACT - ", actionType)
+    }
+    
+    func goToProfileVC () {
+        // Go to profile VC
+        let storyboard =  UIStoryboard(name: "Main", bundle: nil)
+        let nextVC = storyboard.instantiateViewController(withIdentifier: "profileVC") as! ProfileVC
+        self.navigationController?.pushViewController(nextVC, animated: false)
+    }
     
 }
 

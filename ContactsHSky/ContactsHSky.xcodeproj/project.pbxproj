@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0907F2EA22BEBE7E00EECB80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0907F2E922BEBE7E00EECB80 /* AppDelegate.swift */; };
-		0907F2EC22BEBE7E00EECB80 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0907F2EB22BEBE7E00EECB80 /* ViewController.swift */; };
+		0907F2EC22BEBE7E00EECB80 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0907F2EB22BEBE7E00EECB80 /* ProfileVC.swift */; };
 		0907F2EF22BEBE7E00EECB80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0907F2ED22BEBE7E00EECB80 /* Main.storyboard */; };
 		0907F2F222BEBE7E00EECB80 /* ContactsHSky.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0907F2F022BEBE7E00EECB80 /* ContactsHSky.xcdatamodeld */; };
 		0907F2F722BEBE7F00EECB80 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0907F2F522BEBE7F00EECB80 /* LaunchScreen.storyboard */; };
@@ -20,7 +20,7 @@
 /* Begin PBXFileReference section */
 		0907F2E622BEBE7E00EECB80 /* ContactsHSky.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContactsHSky.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0907F2E922BEBE7E00EECB80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0907F2EB22BEBE7E00EECB80 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		0907F2EB22BEBE7E00EECB80 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		0907F2EE22BEBE7E00EECB80 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0907F2F122BEBE7E00EECB80 /* ContactsHSky.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ContactsHSky.xcdatamodel; sourceTree = "<group>"; };
 		0907F2F622BEBE7F00EECB80 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -82,7 +82,7 @@
 		0907F2FF22BECCCA00EECB80 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				0907F2EB22BEBE7E00EECB80 /* ViewController.swift */,
+				0907F2EB22BEBE7E00EECB80 /* ProfileVC.swift */,
 				0907F30322BEDF9B00EECB80 /* ContactsTableVC.swift */,
 			);
 			path = Controllers;
@@ -170,7 +170,7 @@
 			files = (
 				0907F30222BECD3C00EECB80 /* ContactsCell.swift in Sources */,
 				0907F30422BEDF9B00EECB80 /* ContactsTableVC.swift in Sources */,
-				0907F2EC22BEBE7E00EECB80 /* ViewController.swift in Sources */,
+				0907F2EC22BEBE7E00EECB80 /* ProfileVC.swift in Sources */,
 				0907F2F222BEBE7E00EECB80 /* ContactsHSky.xcdatamodeld in Sources */,
 				0907F2EA22BEBE7E00EECB80 /* AppDelegate.swift in Sources */,
 			);
