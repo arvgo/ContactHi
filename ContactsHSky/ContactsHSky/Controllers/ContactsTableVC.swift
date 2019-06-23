@@ -54,7 +54,7 @@ class ContactsTableVC: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
-        let sectHeader = "PlaceHldr Ind"
+        let sectHeader = "Contacts"
         return sectHeader
         
     }
@@ -66,16 +66,19 @@ class ContactsTableVC: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+        var nameContact = ""
+        var phoneContact = ""
+        var imageContact = ""
+        
         let cellContact = contactsTableVC.dequeueReusableCell(withIdentifier: "contactCell", for: indexPath)
         let contactPerson = contactsOfUser[indexPath.row]
-        print(contactPerson)
         
         cellContact.backgroundColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 0.1485445205)
         cellContact.accessoryType = UITableViewCell.AccessoryType.disclosureIndicator
         cellContact.selectionStyle = .none
         
         // Cell Image
-        cellContact.imageView?.image = UIImage(named: "personPlaceholder")
+         let placeholderImg = UIImage(named: "personPlaceholder")
         
         // Add Tab Gesture Recognizer to image
         let imageTap =  MyTapGesture(target: self, action: #selector(self.openCall))
@@ -83,18 +86,37 @@ class ContactsTableVC: UITableViewController {
         cellContact.imageView?.addGestureRecognizer(imageTap)
         cellContact.imageView?.isUserInteractionEnabled = true
         
+        // Check for image. If none, use placeholder image
+        if (!contactPerson.imageDataAvailable) {
+            cellContact.imageView?.image = placeholderImg
+        } else {
+            // get Image
+            cellContact.imageView?.image = UIImage(data: contactPerson.imageData!)
+        }
+        
         // Contact Name
+        nameContact = "\(contactPerson.givenName) \(contactPerson.familyName)"
+        if (nameContact != "") {
+            nameContact = "\(contactPerson.givenName) \(contactPerson.familyName)"
+        } else {
+            nameContact = "no name"
+        }
         cellContact.textLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        cellContact.textLabel?.text = "\(contactPerson.givenName) \(contactPerson.familyName)"
+        cellContact.textLabel?.text = nameContact
         
         // Contact Phone number
         cellContact.detailTextLabel?.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
-        let phone = contactPerson.phoneNumbers.first?.value
-        cellContact.detailTextLabel?.text = "\(phone?.stringValue)"
         
+        if let firstPhone = contactPerson.phoneNumbers.first?.value {
+            phoneContact = firstPhone.stringValue
+        } else {
+            phoneContact = "no number"
+        }
+        
+        cellContact.detailTextLabel?.text = "\(phoneContact)"
+
         // Send Phone Number on tapping on image
-//        imageTap.phoneNumber = "\(phoneNumTs[indexPath.row])"
-        
+        imageTap.phoneNumber = "\(phoneContact)"
         
         return cellContact
     }
@@ -104,7 +126,6 @@ class ContactsTableVC: UITableViewController {
         let editAction = UIContextualAction(style: .destructive, title: "Edit") { (action, view, handler) in
             // Call alert message
             self.alertMsg(alertType: "edit", row: indexPath.row)
-            print("Edit Action for ", indexPath.row)
         }
         editAction.backgroundColor = .green
         let configuration = UISwipeActionsConfiguration(actions: [editAction])
@@ -160,7 +181,6 @@ class ContactsTableVC: UITableViewController {
             DispatchQueue.main.async { [weak self] in
                 self?.tableView.reloadData()
             }
-            print("Contacts >> ", contactsOfUser)
         } catch {
             // something went wrong
             print(error)
@@ -170,7 +190,6 @@ class ContactsTableVC: UITableViewController {
     // MARK: - Phone Number
     @objc func openCall(sender : MyTapGesture) {
         let pNumber = sender.phoneNumber
-        print(pNumber)
         callNumber(phoneNumber: pNumber)
     }
     
@@ -205,23 +224,21 @@ class ContactsTableVC: UITableViewController {
         var titleAlert = ""
         var titleMsg = ""
         
-        var contactName = contactsTs[row]
+        let contactPerson = contactsOfUser[row]
+        var contactName = "\(contactPerson.givenName) \(contactPerson.familyName)"
         
         switch alertType {
         case "edit":
             titleAlert = "Editing Contact \(contactName)"
             titleMsg =  "Do you want to edit \(contactName)?"
-            print ("edit")
             
         case "delete":
             titleAlert = "Deleting Contact \(contactName)"
             titleMsg = "Do you want to delete \(contactName) from contacts?"
-            print ("delete")
             
         case "add":
             titleAlert = "Adding Contact"
             titleMsg = "Do you want to add to contacts?"
-            print ("add")
             
         default:
             break
@@ -234,13 +251,21 @@ class ContactsTableVC: UITableViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
             switch alertType {
             case "edit":
-                self.goToProfileVC()
+                let imgProf = UIImage(named: "personPlaceholder")!
+                var phoneNo = ""
+                if let firstPhone = contactPerson.phoneNumbers.first?.value {
+                    phoneNo = firstPhone.stringValue
+                } else {
+                    phoneNo = "no number"
+                }
+                self.goToProfileVC(name: contactPerson.givenName, surname: contactPerson.familyName, profImg: imgProf, phoneNum: phoneNo, proType: "edit")
                 
             case "delete":
                 self.alertAction(actionType: alertType)
 
             case "add":
-                self.goToProfileVC()
+                let imgProf = UIImage(named: "personPlaceholder")!
+                self.goToProfileVC(name: "", surname: "", profImg: imgProf, phoneNum: "",  proType: "add")
 
             default:
                 break
@@ -256,11 +281,16 @@ class ContactsTableVC: UITableViewController {
         print("alertACT - ", actionType)
     }
     
-    func goToProfileVC () {
+    func goToProfileVC (name: String, surname: String, profImg: UIImage, phoneNum: String, proType: String) {
         // Go to profile VC
         let storyboard =  UIStoryboard(name: "Main", bundle: nil)
         let nextVC = storyboard.instantiateViewController(withIdentifier: "profileVC") as! ProfileVC
         self.navigationController?.pushViewController(nextVC, animated: false)
+        if (proType == "edit") {
+            nextVC.initProfileView(firstName: name, lastName: surname, profileImage: profImg, phoneNumber: phoneNum, profileType: .edit)
+        } else if (proType == "add") {
+            nextVC.initProfileView(firstName: name, lastName: surname, profileImage: profImg, phoneNumber: phoneNum, profileType: .createNew)
+        }
     }
     
 }
