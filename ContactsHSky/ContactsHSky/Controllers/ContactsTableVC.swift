@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Contacts
 
 class ContactsTableVC: UITableViewController {
     
@@ -14,10 +15,9 @@ class ContactsTableVC: UITableViewController {
     // MARK: - Properties
     // Section Header Index
     private let indexLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
-
-    var contactsTs = ["Ar", "Ab", "Baa", "Effe"]
-    var phoneNumTs = ["01536", "0221", "00222", "022343"]
     
+    // Contacts
+    var contactsOfUser = [CNContact]()
     
     // MARK: - Outlets
     @IBOutlet weak var contactsTableVC: UITableView!
@@ -37,6 +37,9 @@ class ContactsTableVC: UITableViewController {
         
         // Remove Extra Cells at bottom of TVC
         contactsTableVC.tableFooterView = UIView()
+         // MARK: - Set up Contacts
+        setUpContacts()
+        
     }
     
     // MARK: - TableView
@@ -46,7 +49,7 @@ class ContactsTableVC: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return contactsTs.count
+        return contactsOfUser.count
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -64,6 +67,8 @@ class ContactsTableVC: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cellContact = contactsTableVC.dequeueReusableCell(withIdentifier: "contactCell", for: indexPath)
+        let contactPerson = contactsOfUser[indexPath.row]
+        print(contactPerson)
         
         cellContact.backgroundColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 0.1485445205)
         cellContact.accessoryType = UITableViewCell.AccessoryType.disclosureIndicator
@@ -80,14 +85,15 @@ class ContactsTableVC: UITableViewController {
         
         // Contact Name
         cellContact.textLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        cellContact.textLabel?.text = contactsTs[indexPath.row]
+        cellContact.textLabel?.text = "\(contactPerson.givenName) \(contactPerson.familyName)"
         
         // Contact Phone number
         cellContact.detailTextLabel?.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
-        cellContact.detailTextLabel?.text = phoneNumTs[indexPath.row]
+        let phone = contactPerson.phoneNumbers.first?.value
+        cellContact.detailTextLabel?.text = "\(phone?.stringValue)"
         
         // Send Phone Number on tapping on image
-        imageTap.phoneNumber = "\(phoneNumTs[indexPath.row])"
+//        imageTap.phoneNumber = "\(phoneNumTs[indexPath.row])"
         
         
         return cellContact
@@ -116,6 +122,50 @@ class ContactsTableVC: UITableViewController {
         }
     }
     
+    
+    // MARK: - Contacts
+    fileprivate func setUpContacts() {
+        
+        let store = CNContactStore()
+        let authorizationStatus = CNContactStore.authorizationStatus(for: .contacts)
+        
+        if authorizationStatus == .notDetermined {
+            // Ask user for Permission to access user's contacts
+            store.requestAccess(for: .contacts) { [weak self] didAuthorize,
+                error in
+                if didAuthorize {
+                    self?.retrieveContacts(from: store)
+                }
+            }
+        } else if authorizationStatus == .authorized {
+            retrieveContacts(from: store)
+        }
+    }
+    
+    //
+    func retrieveContacts(from store: CNContactStore) {
+        
+        let containerId = store.defaultContainerIdentifier()
+        let predicate = CNContact.predicateForContactsInContainer(withIdentifier: containerId)
+        // Create a list of Keys
+        let keysToFetch = [CNContactGivenNameKey as CNKeyDescriptor,
+                           CNContactFamilyNameKey as CNKeyDescriptor,
+                           CNContactPhoneNumbersKey as CNKeyDescriptor,
+                           CNContactImageDataAvailableKey as
+            CNKeyDescriptor,
+                           CNContactImageDataKey as CNKeyDescriptor]
+        
+        do {
+            contactsOfUser = try! store.unifiedContacts(matching: predicate, keysToFetch: keysToFetch)
+            DispatchQueue.main.async { [weak self] in
+                self?.tableView.reloadData()
+            }
+            print("Contacts >> ", contactsOfUser)
+        } catch {
+            // something went wrong
+            print(error)
+        }
+    }
     
     // MARK: - Phone Number
     @objc func openCall(sender : MyTapGesture) {
