@@ -43,5 +43,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need to access your photo library for setting the contact&apos;s image.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need to access your photo library for setting the contact&apos;s image.</string>
 </dict>
 </plist>

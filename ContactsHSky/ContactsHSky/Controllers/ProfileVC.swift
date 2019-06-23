@@ -9,7 +9,7 @@
 import UIKit
 import Contacts
 
-class ProfileVC: UIViewController {
+class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     // MARK: - Properties
     
@@ -36,6 +36,12 @@ class ProfileVC: UIViewController {
         self.profileImageView.layer.borderColor = UIColor.blue.cgColor
         self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.width / 2
         self.profileImageView.clipsToBounds = true
+        
+        // Add Tap to ProfileImageView
+        self.profileImageView.isUserInteractionEnabled = true
+        let imageTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.changeImage(recognizer:)))
+        imageTap.numberOfTapsRequired = 1
+        self.profileImageView.addGestureRecognizer(imageTap)
         
         setupProfileVC()
         self.hideKeyboardWhenTappedAround()
@@ -71,8 +77,6 @@ class ProfileVC: UIViewController {
         switch profileType {
         case .createNew:
             self.profileUserImage = profileImage
-//            self.firstNameString = ""
-//            self.lastNameString = ""
             
         case .edit:
             self.profileUserImage = profileImage
@@ -91,7 +95,7 @@ class ProfileVC: UIViewController {
         
     }
     
-    // Create new Contact
+    // MARK: - Create new Contact
     func createContact (_ firstName: String, lastName: String, phone: String?, image: UIImage?){
         // create contact with mandatory values: first and last name
         let newContact = CNMutableContact()
@@ -125,6 +129,37 @@ class ProfileVC: UIViewController {
         }
     }
     
+    // MARK: - ImagePicker
+    @objc func changeImage(recognizer: UIGestureRecognizer) {
+        let picker = UIImagePickerController()
+        
+        picker.delegate = self
+        picker.sourceType = .photoLibrary
+        picker.allowsEditing = true
+        
+        present(picker, animated: true, completion: nil)
+        print("image clicked 2")
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        var selectedImageFromPicker: UIImage?
+        
+        if let editedImage = info[UIImagePickerController.InfoKey.editedImage] {
+            selectedImageFromPicker = editedImage as? UIImage
+            
+        } else if let originalImage = info[UIImagePickerController.InfoKey.originalImage] {
+            selectedImageFromPicker = originalImage as? UIImage
+        }
+        
+        if let selectedImage = selectedImageFromPicker {
+            profileImageView.image = selectedImage
+        }
+        
+        dismiss(animated: true, completion: nil)
+    }
+    
+    // MARK: - Misc Fncts
     // For pressing return on the keyboard to dismiss keyboard
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         for textField in self.view.subviews where textField is UITextField {
