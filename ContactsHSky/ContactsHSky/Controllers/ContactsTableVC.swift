@@ -39,6 +39,7 @@ class ContactsTableVC: UITableViewController {
         contactsTableVC.tableFooterView = UIView()
          // MARK: - Set up Contacts
         setUpContacts()
+        contactsTableVC.reloadData()
         
     }
     
@@ -138,8 +139,8 @@ class ContactsTableVC: UITableViewController {
 //            objects.remove(at: indexPath.row)
 //            tableView.deleteRows(at: [indexPath], with: .fade)
             // Call alert message
+            // TODO: - Remove contact
             alertMsg(alertType: "delete", row: indexPath.row)
-            print("swipe to del ", indexPath.row)
         }
     }
     
@@ -215,7 +216,6 @@ class ContactsTableVC: UITableViewController {
     @objc func addContact () {
         // Call alert message
         alertMsg(alertType: "add", row: 0)
-        print("Add Contact Tapped")
     }
     
     

@@ -9,7 +9,7 @@
 import UIKit
 import Contacts
 
-class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     
     // MARK: - Properties
     
@@ -54,21 +54,24 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
     }
     
     @IBAction func saveTap(_ sender: Any) {
-        print("csave Tapped")
+        
+        if ((nameTxtFld.text != "" || surnameTxtField.text != "") && isPhoneNumberValid(phoneNumTxtFld.text!)) {
         
         createContact(nameTxtFld.text ?? "", lastName: surnameTxtField.text ?? "", phone: phoneNumTxtFld.text ?? "", image: profileUserImage)
         
         // create the alert
-        let alert = UIAlertController(title: "Saved Profile", message: "", preferredStyle: UIAlertController.Style.alert)
-        
-        // add an action (button)
+        let alert = UIAlertController(title: "Success", message: "Profile has been saved.", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { action in
             self.navigationController?.popToRootViewController(animated: true)
-        }))
-        
-        // show the alert
-        self.present(alert, animated: true, completion: nil)
-        
+            }))
+            // show the alert
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "Error", message: "Profile has not been saved.", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+            // show the alert
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     // MARK: - Set Up Profile VC
@@ -138,7 +141,6 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         picker.allowsEditing = true
         
         present(picker, animated: true, completion: nil)
-        print("image clicked 2")
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -161,11 +163,39 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
     
     // MARK: - Misc Fncts
     // For pressing return on the keyboard to dismiss keyboard
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        for textField in self.view.subviews where textField is UITextField {
+//    func textFieldShouldReturn(textField: UITextField) -> Bool {
+//        if textField == nameTxtFld {
+//            textField.resignFirstResponder()
+//            surnameTxtField.becomeFirstResponder()
+//        } else if textField == surnameTxtField {
+//            textField.resignFirstResponder()
+//            phoneNumTxtFld.becomeFirstResponder()
+//        } else if textField == phoneNumTxtFld {
+//            textField.resignFirstResponder()
+//        }
+//        return true
+//    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        let nextTag = textField.tag + 1
+        
+        if let nextResponder = textField.superview?.viewWithTag(nextTag) {
+            nextResponder.becomeFirstResponder()
+        } else {
             textField.resignFirstResponder()
         }
+        
         return true
+    }
+    
+    func isPhoneNumberValid(_ phoneNumber: String) -> Bool {
+        
+        if phoneNumber.count < 10 {
+            return false
+        } else {
+            return true
+        }
+        
     }
 }
 
@@ -187,4 +217,3 @@ extension UIViewController {
         view.endEditing(true)
     }
 }
-
